@@ -22,8 +22,6 @@ DBD += stdSupport.dbd
 
 #=============================
 
-#PROD_IOC_vxWorks = std
-
 LIBRARY_IOC += std
 
 std_SRCS  += scalerRecord.c
@@ -37,8 +35,7 @@ std_SRCS += std_registerRecordDeviceDriver.cpp
 #The following adds support from base/src/vxWorks
 #std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
-# publish this file so it can be included by device support for scaler
-# built in the MCA module
+# publish header files needed by other modules
 INC += devScaler.h
 
 std_LIBS += mpf mpfEpics

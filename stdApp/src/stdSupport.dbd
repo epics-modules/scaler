@@ -1,6 +1,7 @@
 ################
 # RECORD SUPPORT
 ################
+include "scalerRecord.dbd"
 
 ################
 # DEVICE SUPPORT
