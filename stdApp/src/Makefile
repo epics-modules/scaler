@@ -1,3 +1,61 @@
 TOP=../..
-include $(TOP)/config/CONFIG_APP
-include $(TOP)/config/RULES_ARCHS
+
+include $(TOP)/configure/CONFIG
+#----------------------------------------
+#  ADD MACRO DEFINITIONS AFTER THIS LINE
+#=============================
+
+# For Kate Feng's implementation of devScaler.c, which uses Till
+# Straumann's basicIoOps.h to bridge any mismatch between endianness
+# of Joerger scaler hardware and endianness of processor.
+USR_CFLAGS += -DHAS_IOOPS_H
+
+#=============================
+# xxxRecord.h will be created from xxxRecord.dbd
+
+DBDINC += scalerRecord
+
+# <name>.dbd will be created from <name>Include.dbd
+DBD += std.dbd
+DBDINSTALL += ../stdShare.dbd
+
+#=============================
+
+PROD_IOC_vxWorks = std
+
+LIBRARY_IOC_vxWorks += std
+
+std_SRCS += scalerRecord.c devScaler.c
+
+# <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
+std_SRCS += std_registerRecordDeviceDriver.cpp
+#std_SRCS_DEFAULT += stdMain.cpp #maybe only for win32
+#std_SRCS_vxWorks += -nil- #?
+
+#The following adds support from base/src/vxWorks
+std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
+
+# publich this file so it can be included by device support for scaler
+# built in the MCA module
+INC += devScaler.h
+
+std_LIBS += recIoc
+std_LIBS += softDevIoc
+std_LIBS += testDevIoc
+std_LIBS += iocsh
+std_LIBS += miscIoc
+std_LIBS += rsrvIoc
+std_LIBS += dbtoolsIoc
+std_LIBS += asIoc
+std_LIBS += dbIoc
+std_LIBS += registryIoc
+std_LIBS += dbStaticIoc
+std_LIBS += ca
+std_LIBS += Com
+
+#===========================
+
+include $(TOP)/configure/RULES
+#----------------------------------------
+#  ADD RULES AFTER THIS LINE
+
