@@ -8,7 +8,7 @@ include $(TOP)/configure/CONFIG
 # For Kate Feng's implementation of devScaler.c, which uses Till
 # Straumann's basicIoOps.h to bridge any mismatch between endianness
 # of Joerger scaler hardware and endianness of processor.
-USR_CFLAGS += -DHAS_IOOPS_H
+#USR_CFLAGS += -DHAS_IOOPS_H
 
 #=============================
 # xxxRecord.h will be created from xxxRecord.dbd
@@ -18,6 +18,7 @@ DBDINC += scalerRecord
 # <name>.dbd will be created from <name>Include.dbd
 DBD += std.dbd
 DBD += stdVX.dbd
+DBD += stdSupport.dbd
 
 #=============================
 
@@ -38,8 +39,8 @@ std_SRCS += std_registerRecordDeviceDriver.cpp
 # publish this file so it can be included by device support for scaler
 # built in the MCA module
 INC += devScaler.h
-INC += fastPID.h
 
+std_LIBS += mpf mpfEpics
 std_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
@@ -47,4 +48,3 @@ std_LIBS += $(EPICS_BASE_IOC_LIBS)
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
-
