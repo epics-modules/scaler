@@ -26,7 +26,8 @@ DBD += stdSupport.dbd
 
 LIBRARY_IOC += std
 
-std_SRCS_vxWorks  += scalerRecord.c devScaler.c
+std_SRCS  += scalerRecord.c
+std_SRCS_vxWorks  += devScaler.c
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
 std_SRCS += std_registerRecordDeviceDriver.cpp
