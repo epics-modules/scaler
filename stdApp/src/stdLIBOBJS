@@ -1,3 +1,0 @@
-# scaler
-STDLIBOBJS += $(STD_BIN)/scalerRecord.o
-STDLIBOBJS += $(STD_BIN)/devScaler.o

@@ -17,11 +17,10 @@ DBDINC += scalerRecord
 
 # <name>.dbd will be created from <name>Include.dbd
 DBD += std.dbd
-DBDINSTALL += ../stdShare.dbd
 
 #=============================
 
-PROD_IOC_vxWorks = std
+#PROD_IOC_vxWorks = std
 
 LIBRARY_IOC_vxWorks += std
 
