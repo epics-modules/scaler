@@ -6,8 +6,6 @@ include $(TOP)/config/CONFIG_APP
 
 SRCS.c += ../scalerRecord.c ../devScaler.c
 
-LIBNAME = baseLib
-
 STD_BIN = .
 include ../stdLIBOBJS		#defines STDLIBOBJS
 PROD += stdLib
