@@ -26,14 +26,6 @@ LIBRARY_IOC += std
 
 std_SRCS += scalerRecord.c
 
-# <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
-std_SRCS += std_registerRecordDeviceDriver.cpp
-#std_SRCS_DEFAULT += stdMain.cpp #maybe only for win32
-#std_SRCS_vxWorks += -nil- #?
-
-#The following adds support from base/src/vxWorks
-#std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
-
 # publish this file so it can be included by device support for scaler
 # built in the MCA module
 INC += devScaler.h
@@ -48,7 +40,7 @@ PROD_IOC = stdApp
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
 stdApp_SRCS_DEFAULT += std_registerRecordDeviceDriver.cpp
-#stdApp_SRCS_vxWorks += stdVX_registerRecordDeviceDriver.cpp
+stdApp_SRCS_vxWorks += stdVX_registerRecordDeviceDriver.cpp
 stdApp_SRCS_DEFAULT += stdMain.cpp
 stdApp_SRCS_vxWorks += -nil-
 #The following adds support from base/src/vxWorks
