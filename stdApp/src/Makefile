@@ -24,8 +24,7 @@ DBD += stdSupport.dbd
 
 LIBRARY_IOC += std
 
-std_SRCS  += scalerRecord.c
-std_SRCS_vxWorks  += devScaler.c
+std_SRCS += scalerRecord.c
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
 std_SRCS += std_registerRecordDeviceDriver.cpp
@@ -35,7 +34,8 @@ std_SRCS += std_registerRecordDeviceDriver.cpp
 #The following adds support from base/src/vxWorks
 #std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
-# publish header files needed by other modules
+# publish this file so it can be included by device support for scaler
+# built in the MCA module
 INC += devScaler.h
 
 std_LIBS += mpf mpfEpics
@@ -56,7 +56,6 @@ stdApp_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
 stdApp_LIBS += std
 stdApp_LIBS += mpf mpfEpics
-stdApp_LIBS += seq pv
 stdApp_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
