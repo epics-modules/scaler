@@ -17,14 +17,15 @@ DBDINC += scalerRecord
 
 # <name>.dbd will be created from <name>Include.dbd
 DBD += std.dbd
+DBD += stdVX.dbd
 
 #=============================
 
 #PROD_IOC_vxWorks = std
 
-LIBRARY_IOC_vxWorks += std
+LIBRARY_IOC += std
 
-std_SRCS += scalerRecord.c devScaler.c
+std_SRCS_vxWorks  += scalerRecord.c devScaler.c
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
 std_SRCS += std_registerRecordDeviceDriver.cpp
@@ -32,25 +33,14 @@ std_SRCS += std_registerRecordDeviceDriver.cpp
 #std_SRCS_vxWorks += -nil- #?
 
 #The following adds support from base/src/vxWorks
-std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
+#std_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
-# publich this file so it can be included by device support for scaler
+# publish this file so it can be included by device support for scaler
 # built in the MCA module
 INC += devScaler.h
+INC += fastPID.h
 
-std_LIBS += recIoc
-std_LIBS += softDevIoc
-std_LIBS += testDevIoc
-std_LIBS += iocsh
-std_LIBS += miscIoc
-std_LIBS += rsrvIoc
-std_LIBS += dbtoolsIoc
-std_LIBS += asIoc
-std_LIBS += dbIoc
-std_LIBS += registryIoc
-std_LIBS += dbStaticIoc
-std_LIBS += ca
-std_LIBS += Com
+std_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
 

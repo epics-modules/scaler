@@ -3,10 +3,12 @@ include "base.dbd"
 ################
 # RECORD SUPPORT
 ################
+include "scalerRecord.dbd"
 
 ################
 # DEVICE SUPPORT
 ################
+device(scaler,VME_IO,devScaler,"Joerger VSC8/16")
 
 ################
 # DRIVER SUPPORT
