@@ -41,7 +41,7 @@ std_SRCS += std_registerRecordDeviceDriver.cpp
 # built in the MCA module
 INC += devScaler.h
 
-std_LIBS += mpf mpfEpics mpfSerial
+std_LIBS += mpf mpfEpics
 std_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #=============================
@@ -58,7 +58,7 @@ stdApp_SRCS_vxWorks += -nil-
 stdApp_OBJS_vxWorks += $(EPICS_BASE_BIN)/vxComLibrary
 
 stdApp_LIBS += std
-stdApp_LIBS += mpf mpfEpics mpfSerial
+stdApp_LIBS += mpf mpfEpics
 stdApp_LIBS += seq pv
 stdApp_LIBS += $(EPICS_BASE_IOC_LIBS)
 
