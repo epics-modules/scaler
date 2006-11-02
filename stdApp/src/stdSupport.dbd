@@ -7,6 +7,9 @@ include "scalerRecord.dbd"
 # DEVICE SUPPORT
 ################
 
+# Scaler record
+device(scaler,INST_IO,devScalerAsyn,"Asyn Scaler")
+
 ################
 # DRIVER SUPPORT
 ################
