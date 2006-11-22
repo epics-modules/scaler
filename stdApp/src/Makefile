@@ -30,6 +30,7 @@ std_SRCS += devScalerAsyn.c
 # publish this file so it can be included by device support for scaler
 # built in the MCA module
 INC += devScaler.h
+INC += devScalerAsyn.h
 
 std_LIBS += asyn
 std_LIBS += $(EPICS_BASE_IOC_LIBS)
