@@ -27,6 +27,7 @@ LIBRARY_IOC += std
 std_SRCS += scalerRecord.c
 std_SRCS += devScalerAsyn.c
 std_SRCS += drvScalerSoft.c
+std_SRCS += drvScaler974.cpp
 
 # publish this file so it can be included by device support for scaler
 # built in the MCA module
