@@ -59,3 +59,8 @@ stdApp_LIBS += $(EPICS_BASE_IOC_LIBS)
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
+
+# Parallel build sometimes fails.
+# Make dependences on epidRecord.h explicit.
+scalerRecord$(OBJ):        $(COMMON_DIR)/scalerRecord.h
+devScalerAsyn$(OBJ):       $(COMMON_DIR)/scalerRecord.h
