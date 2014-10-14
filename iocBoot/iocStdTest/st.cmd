@@ -18,6 +18,9 @@ asynSetOption("serial1", 0, "parity", "none")
 asynSetOption("serial1", 0, "bits", "8")
 asynSetOption("serial1", 0, "stop", "1")
 
+# soft scaler
+< softScaler.cmd
+
 iocInit
 
 ### Start up the autosave task and tell it what to do.
