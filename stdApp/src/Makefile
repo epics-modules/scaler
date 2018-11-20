@@ -10,6 +10,9 @@ include $(TOP)/configure/CONFIG
 # of Joerger scaler hardware and endianness of processor.
 #USR_CFLAGS += -DHAS_IOOPS_H
 
+# For base-7
+USR_CPPFLAGS += -DUSE_TYPED_RSET
+
 #=============================
 # xxxRecord.h will be created from xxxRecord.dbd
 
