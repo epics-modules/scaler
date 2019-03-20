@@ -1,5 +1,7 @@
 # Makefile
 TOP = ../..
+
+#----------------------------------------------------
 include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
@@ -7,8 +9,6 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 #  Optimization of db files using dbst (DEFAULT: NO)
 #DB_OPT = YES
-
-#----------------------------------------------------
 # Create and install (or just install) dbd files
 # <name>.dbd will be created from <name>Include.dbd
 #DBD += example.dbd
@@ -16,9 +16,12 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 # Create and install (or just install)
 # databases, templates, substitutions like this
-#DB += dbExample1.db
-#DB += dbExample2.db
-#DB += dbSubExample.db
+#DB += sample.db
+
+DB += $(patsubst ../%, %, $(wildcard ../*.template))
+DB += $(patsubst ../%, %, $(wildcard ../*.db))
+DB += $(patsubst ../%, %, $(wildcard ../*.vdb))
+
 
 #----------------------------------------------------
 # Declare template files which do not show up in DB
