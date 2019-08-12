@@ -145,7 +145,7 @@ volatile int scaler_wait_time = 10;
 #define initialize NULL
 static long init_record(dbCommon *pcommon, int pass);
 static long process(dbCommon *pcommon);
-static long special(const DBADDR *paddr, int after);
+static long special(DBADDR *paddr, int after);
 #define get_value NULL
 #define cvt_dbaddr NULL
 #define get_array_info NULL
@@ -603,7 +603,7 @@ static void updateCounts(scalerRecord *pscal)
 }
 
 
-static long special(const DBADDR *paddr, int after)
+static long special(DBADDR *paddr, int after)
 {
 	scalerRecord *pscal = (scalerRecord *)(paddr->precord);
 	int i=0, status;

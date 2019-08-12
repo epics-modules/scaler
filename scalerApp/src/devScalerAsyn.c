@@ -362,8 +362,8 @@ static void asynCallback(asynUser *pasynUser)
                                    (epicsInt32 *)pmsg->pval, psr->nch, &nread);
        asynPrint(pasynUser, ASYN_TRACE_FLOW,
          "devScalerAsyn::asynCallback readCommand nread=%d, counts[]=%d %d %d %d %d %d %d %d\n",
-         nread, pmsg->pval[0], pmsg->pval[1], pmsg->pval[2], pmsg->pval[3], 
-                pmsg->pval[4], pmsg->pval[5], pmsg->pval[6], pmsg->pval[7]);        
+         (int) nread, pmsg->pval[0], pmsg->pval[1], pmsg->pval[2], pmsg->pval[3],
+                pmsg->pval[4], pmsg->pval[5], pmsg->pval[6], pmsg->pval[7]);
     }
     else if (pmsg->command == pPvt->presetCommand) {
         /* Send preset command */

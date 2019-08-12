@@ -226,7 +226,7 @@ void Scaler974::eventThread()
     
     while(1)
     {
-        epicsEventWait(this->eventId);
+        epicsEventMustWait(this->eventId);
         while(1)
         {
             status = this->sendCommand("SHOW_COUNTS", statusString, sizeof(statusString), &statusLen,

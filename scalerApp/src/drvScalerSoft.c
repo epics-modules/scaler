@@ -412,7 +412,7 @@ static asynStatus int32ArrayRead(void *drvPvt, asynUser *pasynUser, epicsInt32 *
 
     asynPrint(pasynUser, ASYN_TRACE_FLOW, 
         "%s::int32ArrayRead entry, maxChans=%d\n", 
-        pPvt->driver, maxChans);
+        pPvt->driver, (int) maxChans);
 
     switch (command) {
         case scalerReadCommand:
@@ -431,7 +431,7 @@ static asynStatus int32ArrayRead(void *drvPvt, asynUser *pasynUser, epicsInt32 *
             *nactual = maxChans;
             asynPrint(pasynUser, ASYN_TRACE_FLOW, 
                 "%s::int32ArrayRead scalerReadCommand: read %d chans, channel[0]=%d\n", 
-                pPvt->driver, maxChans, data[0]);
+                pPvt->driver, (int) maxChans, data[0]);
             break;
 
         default:
