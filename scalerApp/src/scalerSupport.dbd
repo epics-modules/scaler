@@ -11,10 +11,6 @@ include "scalerRecord.dbd"
 device(scaler,INST_IO,devScalerAsyn,"Asyn Scaler")
 
 ################
-# DRIVER SUPPORT
-################
-
-################
 # OTHER SUPPORT
 ################
 

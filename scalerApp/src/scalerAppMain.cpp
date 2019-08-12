@@ -1,4 +1,4 @@
-/* stdMain.cpp */
+/* scalerAppMain.cpp */
 /* Author:  Marty Kraimer Date:    17MAR2000 */
 
 #include <stddef.h>
@@ -19,5 +19,5 @@ int main(int argc,char *argv[])
     }
     iocsh(NULL);
     epicsExit(0);
-    return(0);
+    return 0;
 }

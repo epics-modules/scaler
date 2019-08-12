@@ -56,7 +56,7 @@ static void eventThreadC(void *pPvt)
 }
 
 Scaler974::Scaler974(const char *portName, const char *serialPort, int serialAddr, int poll)
-    :asynPortDriver(portName, MAX_CHANNELS, 7, 
+    :asynPortDriver(portName, MAX_CHANNELS,
                     asynInt32Mask | asynInt32ArrayMask | asynDrvUserMask,
                     asynInt32Mask,
                     /* Should also be ASYN_CANBLOCK, but device support does not work with asynchronous devices */                 
