@@ -104,13 +104,15 @@ Modification Log:
 #include	<devSup.h>
 #include	<special.h>
 #include	<epicsMutex.h>
+#include	<epicsVersion.h>
+
+#include	<epicsExport.h> /* Defines epicsExportSharedSymbols */
+
 #define GEN_SIZE_OFFSET
 #include	"scalerRecord.h"
 #undef GEN_SIZE_OFFSET
 #include	"devScaler.h"
-#include	<epicsExport.h>
 
-#include	<epicsVersion.h>
 #ifndef EPICS_VERSION_INT
 #define VERSION_INT(V,R,M,P) ( ((V)<<24) | ((R)<<16) | ((M)<<8) | (P))
 #define EPICS_VERSION_INT VERSION_INT(EPICS_VERSION, EPICS_REVISION, EPICS_MODIFICATION, EPICS_PATCH_LEVEL)
@@ -774,9 +776,6 @@ static void monitor(scalerRecord *pscal)
 	}
 	return;
 }
-
-
-#include <epicsExport.h>
 
 epicsExportAddress(int, scalerRecordDebug);
 epicsExportAddress(int, scaler_wait_time);

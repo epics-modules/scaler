@@ -13,9 +13,9 @@
 #include <epicsEvent.h>
 #include <epicsThread.h>
 #include <epicsTime.h>
-#include <epicsExport.h>
 #include <errlog.h>
 #include <iocsh.h>
+#include <epicsExport.h> /* Defines epicsExportSharedSymbols */
 
 #include "devScalerAsyn.h"
 

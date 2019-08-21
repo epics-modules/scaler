@@ -31,7 +31,7 @@
 #include <asynInt32Array.h>
 #include <asynDrvUser.h>
 #include <asynEpicsUtils.h>
-#include <epicsExport.h>
+#include <epicsExport.h> /* Defines epicsExportSharedSymbols */
 
 #include "scalerRecord.h"
 #include "devScaler.h"
