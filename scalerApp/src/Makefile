@@ -28,8 +28,8 @@ scaler_SRCS += drvScaler974.cpp
 INC += devScaler.h
 INC += devScalerAsyn.h
 
-std_LIBS += asyn
-std_LIBS += $(EPICS_BASE_IOC_LIBS)
+scaler_LIBS += asyn
+scaler_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #=============================
 # build an IOC for testing
@@ -63,6 +63,6 @@ include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
-# Make dependences on scalarRecord.h
+# Make dependences on scalerRecord.h
 scalerRecord$(OBJ):        $(COMMON_DIR)/scalerRecord.h
 devScalerAsyn$(OBJ):       $(COMMON_DIR)/scalerRecord.h

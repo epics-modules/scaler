@@ -6,7 +6,7 @@ DIRS += configure
 DIRS += scalerApp
 DIRS += iocBoot
 
-stdApp_DEPEND_DIRS  = configure
+scalerApp_DEPEND_DIRS  = configure
 iocBoot_DEPEND_DIRS = configure
 
 include $(TOP)/configure/RULES_TOP

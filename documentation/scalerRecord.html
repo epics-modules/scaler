@@ -537,11 +537,11 @@ from a startup file that supports scalers:
 dbLoadDatabase("dbd/xxxApp.dbd")
 
 # scalers
-dbLoadRecords("$(STD)/stdApp/Db/scaler16m.db","P=xxx:,S=scaler1,OUT=#C0 S0 @,DTYP=Joerger VSC8/16,FREQ=10000000")
-dbLoadRecords("$(STD)/stdApp/Db/scaler16m.db","P=xxx:,S=scaler2,OUT=#C0 S0 @,DTYP=Joerger VS,FREQ=10000000")
-dbLoadRecords("$(STD)/stdApp/Db/scaler16m.db","P=xxx:,S=scaler3,OUT=#C0 S0 @,DTYP=Struck STR7201 Scaler,FREQ=25000000")
-dbLoadRecords("$(STD)/stdApp/Db/scaler16m.db","P=xxx:,S=scaler4,OUT=#C0 S0 @,DTYP=CAMAC scaler,FREQ=10000000")
-dbLoadRecords("$(STD)/stdApp/Db/scaler32.db", "P=xxx:,S=scaler5,OUT=@asyn($(PORT)),DTYP=Asyn Scaler,FREQ=50000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler1,OUT=#C0 S0 @,DTYP=Joerger VSC8/16,FREQ=10000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler2,OUT=#C0 S0 @,DTYP=Joerger VS,FREQ=10000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler3,OUT=#C0 S0 @,DTYP=Struck STR7201 Scaler,FREQ=25000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler4,OUT=#C0 S0 @,DTYP=CAMAC scaler,FREQ=10000000")
+dbLoadRecords("$(SCALER)/db/scaler32.db", "P=xxx:,S=scaler5,OUT=@asyn($(PORT)),DTYP=Asyn Scaler,FREQ=50000000")
 </PRE>
 
 <blockquote>

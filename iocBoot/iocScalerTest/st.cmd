@@ -1,4 +1,4 @@
-# This is a demonstration startup for for stdApp on non-vxWorks systems
+# This is a demonstration startup for for scalerApp on non-vxWorks systems
 
 < envPaths
 epicsEnvSet("SCALER","${TOP}")
