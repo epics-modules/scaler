@@ -7,7 +7,7 @@ applications:
 
 ## Records
 
-* [scalerRecord.html](scalerRecord.html)    Scaler record
+* [scalerRecord.html](http://htmlpreview.github.io/?https://github.com/epics-modules/scaler/blob/master/documentation/scalerRecord.html)    Scaler record
 
 ## Databases and GUI display files
 
