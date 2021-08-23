@@ -6,10 +6,10 @@ APS BCDA synApps module: scaler
 Contact: Tim Mooney
 
 Full list of synApps modules and contacts:
-  https://epics.anl.gov/bcda/synApps/Included-Modules
+  https://www.aps.anl.gov/BCDA/synApps/Included-Modules
 
 For more information about synApps, see
-   https://epics.anl.gov/bcda/synApps
+   https://www.aps.anl.gov/BCDA/synApps
    
 The synApps *support* repository is located at https://github.com/EPICS-synApps/support
 and contains the shell scripts (**clone.csh** and **clone.bat**) to clone all synApps modules from GitHub.
