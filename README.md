@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/epics-modules/scaler.svg?branch=master)](https://travis-ci.org/epics-modules/scaler)
+[![SCALER](https://github.com/epics-modules/scaler/actions/workflows/ci-scripts-build.yml/badge.svg)](https://github.com/epics-modules/scaler/actions/workflows/ci-scripts-build.yml)
 
 # scaler
 APS BCDA synApps module: scaler
