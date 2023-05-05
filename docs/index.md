@@ -1,5 +1,5 @@
 # HTML and Markdown documentation
 
-* [scalerRecord.html](https://htmlpreview.github.io/?https://github.com/epics-modules/scaler/blob/master/documentation/scalerRecord.html)
+* [scalerRecord.html](scalerRecord.md)
 * [Scaler Module Documentation](scalerDoc.md)
 * [Release Notes](scalerReleaseNotes.md)
