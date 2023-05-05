@@ -1,6 +1,0 @@
-BASE="3.16"
-
-MODULES="calc asyn"
-
-ASYN="R4-42"
-CALC="R3-7-4"
