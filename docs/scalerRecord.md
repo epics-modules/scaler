@@ -1,3 +1,9 @@
+---
+layout: default
+title: Scaler Record
+nav_order: 4
+---
+
 Scaler Record and related software
 ==================================
 

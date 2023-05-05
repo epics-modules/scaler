@@ -1,3 +1,10 @@
+---
+layout: default
+title: Release Notes
+nav_order: 3
+---
+
+
 # Scaler Release Notes
 
 ##  Release 4.0 (Aug. 21, 2019)

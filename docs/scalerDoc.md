@@ -1,3 +1,10 @@
+---
+layout: default
+title: Overview
+nav_order: 2
+---
+
+
 # The synApps Scaler Module
 
 The scaler module publishes the following software items for use by ioc

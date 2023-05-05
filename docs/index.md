@@ -1,3 +1,10 @@
+---
+layout: default
+title: Home
+nav_order: 1
+---
+
+
 # HTML and Markdown documentation
 
 * [scalerRecord.html](scalerRecord.md)
