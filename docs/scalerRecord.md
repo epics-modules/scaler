@@ -64,6 +64,7 @@ In addition to fields common to all record types (see the EPICS Record Reference
 - - - - - -
 
 <a name="Fields_alphabetical"></a>
+
 | Name | Access | Prompt | Data type | Comment |
 |---|---|---|---|---|
 | [ CNT ](#Fields_control) | R/W\* | Count | RECCHOICE | (0:"Done", 1:"Count") |
@@ -95,8 +96,7 @@ In addition to fields common to all record types (see the EPICS Record Reference
 | [ VERS ](#Fields_misc) | R | Code Version | FLOAT | code version |
 
 
-Alphabetical list of record-specific fields 
--------------------------------------------  
+### Alphabetical list of record-specific fields 
 
 NOTE: Hot links in this table take you only to the *section* in which the linked item is described in detail. You'll probably have to scroll down to find the actual item. 
 
@@ -208,7 +208,11 @@ The following table briefly describes the files required to implement and use th
 | devScalerSTR7201.c | Device support for Struck 7201 and SIS3801 |
 | drvMcaSIS3820Asyn.c | Device support for Struck 7201 and SIS3801 |
 | scalerRecord.dbd | This file defines all of the fields menus, etc. for the scaler record. |
-| \*Include.dbd | This file is loaded at ioc-boot time, and by database-configuration tools, and -- for purposes here -- describes the scaler-record fields, and the kinds of devices that may be associated with the scaler record. Normally the file contains the following scaler-related information: 
+
+
+#### Include.dbd 
+
+This file is loaded at ioc-boot time, and by database-configuration tools, and -- for purposes here -- describes the scaler-record fields, and the kinds of devices that may be associated with the scaler record. Normally the file contains the following scaler-related information: | 
     ```  
     # Database definition for scaler record 
     include "scalerRecord.dbd" 
@@ -219,7 +223,7 @@ The following table briefly describes the files required to implement and use th
     device(scaler,VME_IO,devScalerSTR7201,"Struck STR7201 Scaler") 
     device(scaler,VME_IO,devScalerCamac,"CAMAC scaler") 
     ``` 
-    |
+
 
 | DATABASE and AUTOSAVE-REQUEST FILES | |
 |---|---|
@@ -245,13 +249,14 @@ The following table briefly describes the files required to implement and use th
 | scaler\_full\_calc.adl | big operator screen with user calculations |
 | scaler16\_full\_calc.adl | same, but for 16-channel scaler |
 | scaler32\_full\_calc.adl | same, but for 32-channel scaler |
-| These files build `medm` screens to access the scaler record and related process variables. To use one of them from the command line, type, for example 
+
+These files build `medm` screens to access the scaler record and related process variables. To use one of them from the command line, type, for example
     ```  
     medm -x -macro "P=XXX:,S=scaler1" scaler.adl 
     ```  
     
-    where `XXX:scaler1` is the name of a scaler record in an IOC.  These files can also be used as related displays from other `medm`screens by passing the argument `"P=XXX:,S=scaler1"`. 
-    |
+where `XXX:scaler1` is the name of a scaler record in an IOC.  These files can also be used as related displays from other `medm`screens by passing the argument `"P=XXX:,S=scaler1"`. 
+
 
 #### EPICS STARTUP FILE
 
@@ -304,7 +309,8 @@ drvSIS3801Config($(PORT), 0xA0000000, 220, 6, $(MAX_CHANS), $(MAX_SIGNALS))
 |---|---|
 | scalerSettings.req | sample request file to save settings of one scaler database. Edit this file, supplying names of the scaler records whose settings you want saved. (The sample file also saves the states of other records in the sample database, Jscaler.db, that control calculations done when the scaler finishes counting.) |
 | yyScalerSettings.req | save settings of a specified scaler record. This file is `#include`'d (once for each scaler) by scalerSettings.req. |
-| These files tell the backup/restore tool how to save scaler settings. To use them from the command line, type, for example 
+
+These files tell the backup/restore tool how to save scaler settings. To use them from the command line, type, for example
     ```  
     burtrb -f scalerSettings.req -o myScalerSettings.snap
     ```  
@@ -312,7 +318,6 @@ drvSIS3801Config($(PORT), 0xA0000000, 220, 6, $(MAX_CHANS), $(MAX_SIGNALS))
     ```  
     burtwb -f myScalerSettings.snap
     ``` 
-    |
 
 - - - - - -
 

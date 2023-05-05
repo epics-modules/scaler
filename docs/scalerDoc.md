@@ -1,5 +1,3 @@
-![EPICS](https://epics.anl.gov/bcda/Images/logo101.gif)
-
 # The synApps Scaler Module
 
 The scaler module publishes the following software items for use by ioc
