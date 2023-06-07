@@ -7,6 +7,12 @@ nav_order: 3
 
 # Scaler Release Notes
 
+##  Release 4.1 (Jun. 7, 2023)
+
+* Buffer out-of-bounds access fixed in drvScaler974.cpp 
+* Inconsistent definition of Debug() macro fixed
+* Documentation moved to github pages
+
 ##  Release 4.0 (Aug. 21, 2019)
 
 * The scaler record type, device support and associated databases and display files were extracted from the synApps std module into this new stand-alone module, which depends only on Asyn (release 4-32 or later) and EPICS Base.
