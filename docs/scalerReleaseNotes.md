@@ -1,19 +1,25 @@
 ---
 layout: default
 title: Release Notes
-nav_order: 3
+nav_order: 2
 ---
 
-
 # Scaler Release Notes
+{: .no_toc}
 
-##  Release 4.1 (Jun. 7, 2023)
+## Table of contents
+{: .no_toc .text-delta }
+
+- TOC
+{:toc}
+
+## Release 4.1 (Jun. 7, 2023)
 
 * Buffer out-of-bounds access fixed in drvScaler974.cpp 
 * Inconsistent definition of Debug() macro fixed
 * Documentation moved to github pages
 
-##  Release 4.0 (Aug. 21, 2019)
+## Release 4.0 (Aug. 21, 2019)
 
 * The scaler record type, device support and associated databases and display files were extracted from the synApps std module into this new stand-alone module, which depends only on Asyn (release 4-32 or later) and EPICS Base.
 
@@ -21,12 +27,12 @@ nav_order: 3
 
 The items below are the scaler-related excerpts from the Release Notes of the synApps std module from before this module was created.
 
-##  Release 3-5 (Jul. 10, 2018)
+## Release 3-5 (Jul. 10, 2018)
 
 * When counting is finished, post scaler values with DBE_VALUE|DBE_LOG, after updating the time stamp.
 * New iocsh top-level directory, contains scripts with the correct shell commands to add an individual device support to an IOC. For use with the `iocshLoad` command from EPICS base 3.15, further information can be found [here](https://github.com/epics-modules/xxx/wiki/IOC-Shell-Scripts).
 
-##  Release 3-3 (Nov. 10, 2014)
+## Release 3-3 (Nov. 10, 2014)
 
 * scalerRecord.c: use "epicsUInt32" instead of "unsigned long" for Sn and PRn fields
 * devScalerAsyn.c: Changed pointers from unsigned long to epicsUInt32; changes to avoid compiler warnings
@@ -34,14 +40,14 @@ The items below are the scaler-related excerpts from the Release Notes of the sy
 * drvScalerSoft.c: modified to zero scaler-count PVs when scaler is started.
 * Added scalerSoftCtrl database and settings file; added softScaler.cmd example of loading soft scaler into ioc.
 
-##  Release 3-0 (Sept 15, 2011)
+## Release 3-0 (Sept 15, 2011)
 
 * The scaler record no longer makes two calls to disarm the hardware (dset->arm(0)) when the scaler completes counting normally. (Previously, the code supporting user abort of a count was also executed after normal completion.)
 * drvScalerSoft.c: The callback for done must pass the value 1, not 0
 * scaler16m.db: Added COPT=="Always" to $(P)$(S)_calc1 (transform record)
 * Added .opi display files for CSS-BOY
 
-##  Release 2-8 (Mar. 30, 2010)
+## Release 2-8 (Mar. 30, 2010)
 
 * drvScaler974 - new file for Ortec 974 scaler
 * devScalerAsyn.c - ignore callback when DONE==0, register callbacks on address 0.
@@ -82,7 +88,4 @@ The items below are the scaler-related excerpts from the Release Notes of the sy
 ## Release 2-3
 
 * scaler record - device support that used "struct callback" defined in devScaler.h must now replace that with "CALLBACK", and must include epics/base/include/callback.h
-
-Suggestions and Comments to:
-[Tim Mooney ](mailto:mooney@aps.anl.gov): (mooney@aps.anl.gov)
 

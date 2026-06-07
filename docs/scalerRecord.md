@@ -1,24 +1,19 @@
 ---
 layout: default
 title: Scaler Record
-nav_order: 4
+nav_order: 3
 ---
 
-Scaler Record and related software
-==================================
+# Scaler Record
+{: .no_toc}
 
-Tim Mooney
+## Table of contents
+{: .no_toc .text-delta }
 
-Contents
---------
+- TOC
+{:toc}
 
-- [Overview](#Overview)
-- [Field Descriptions](#Fields)
-- [Files, device-support](#Files)
-- [Restrictions](#Restrictions)
-
-Overview
---------
+## Overview
 
 The scaler record provides support for a bank of up to 64 32-bit counters (scaler channels) controlled by a common start/stop mechanism. If the hardware is capable of preset-counter operation, the record divides scaler channels into two groups according to the values of each channel's gate-control field (Gn): simple counters \[Gn = "N" (0)\], and preset counters \[Gn = "Y" (1)\]. Simple counters are zeroed immediately before counting begins, and count upwards. Preset counters are simple counters that will not count higher than a preset value. The first preset counter to reach its preset value stop all counters. (The hardware may actually implement a preset counter by loading in the preset value, and counting down to zero. If so, device support is expected to maintain the fiction that all counters count up from zero.) Currently device support exists for the Joerger VSC 8 and 16 channel VME scalers; Joerger VS64 fly-counting scalers; the SIS3801 multichannel scaler, emulating a single scaler bank, and the SIS3820. Joerger VS scalers do not support preset counting, so the software sets the Gn fields to 0 and keeps them there.
 
@@ -54,22 +49,9 @@ Background counting never affects the state of the CNT field, so this field can 
 
 The scaler record is unlike most other EPICS records in that its processing is neither "synchronous" nor "asynchronous", as these terms are used in the EPICS Application Developer' Guide. Currently, the PACT field is always FALSE after record processing has completed, even though the scaler may be counting. This means the record always responds to channel-access puts, and that counting can be stopped at any time. The record's forward link is not executed until the scaler has stopped counting. 
 
-Field Descriptions
-------------------
+## Field Descriptions
 
-
-In addition to fields common to all record types (see the EPICS Record Reference Manual for these) the scaler record has the fields described below.
-
-- [Alphabetical listing of all fields](#Fields_alphabetical)
-- [Control/status fields:](#Fields_control)
-- [Data fields](#Fields_data)
-- [Link fields](#Fields_link)
-- [Miscellaneous fields](#Fields_misc)
-- [Private fields](#Fields_private)
-
-- - - - - -
-
-<a name="Fields_alphabetical"></a>
+In addition to fields common to all record types (see the [EPICS Record Reference Manual](https://docs.epics-controls.org/projects/base/en/latest/dbCommonRecord.html) for these) the scaler record has the fields described below.
 
 | Name | Access | Prompt | Data type | Comment |
 |---|---|---|---|---|
@@ -115,9 +97,7 @@ Note: In the __Access__ column above:
 | N | No access allowed |
 
 
-Control/status fields
----------------------
-<a name="Fields_control"></a>
+### Control/status fields
 
 | Name | Access | Prompt | Data type | Comments |
 |---|---|---|---|---|
@@ -144,9 +124,7 @@ Control/status fields
 |  |  |  |  |  |
 
 
-Data fields
------------
-<a name="Fields_data"></a>
+### Data fields
 
 | Name | Access | Prompt | Data type | Comments |
 |---|---|---|---|---|
@@ -158,9 +136,7 @@ Data fields
 | This field is a proxy for the value field, S1, associated with scaler 1. Whenever S1 changes, the record will set T = S1/FREQ. |
 
 
-Link fields
------------
-<a name="Fields_link"></a>
+### Link fields
 
 | Name | Access | Prompt | Data type | Comments |
 |---|---|---|---|---|
@@ -169,9 +145,7 @@ Link fields
 | OUT | R | Output Specification | OUTLINK | This field specifies the hardware to be controlled. |
 
 
-Miscellaneous fields
---------------------
-<a name="Fields_misc"></a>
+### Miscellaneous fields
 
 | Name | Access | Prompt | Data type | Comments |
 |---|---|---|---|---|
@@ -181,9 +155,7 @@ Miscellaneous fields
 | VERS | R | Code Version | FLOAT | Version number of the recScaler.c code. |
 | NCH | R | Number of channels | SHORT | The number of channels actually supported by the underlying hardware, as reported by device support. |
 
-Private fields
---------------
-<a name="Fields_private"></a>
+### Private fields
 
 | Name | Access | Prompt | Data type | Comments |
 |---|---|---|---|---|
@@ -199,8 +171,7 @@ Private fields
 
 
 
-Files, device support
----------------------
+## Files and Device Support
 
 The following table briefly describes the files required to implement and use the scaler record.
 
@@ -216,19 +187,20 @@ The following table briefly describes the files required to implement and use th
 | scalerRecord.dbd | This file defines all of the fields menus, etc. for the scaler record. |
 
 
-#### Include.dbd 
+### Include.dbd
 
-This file is loaded at ioc-boot time, and by database-configuration tools, and -- for purposes here -- describes the scaler-record fields, and the kinds of devices that may be associated with the scaler record. Normally the file contains the following scaler-related information: | 
-    ```  
-    # Database definition for scaler record 
-    include "scalerRecord.dbd" 
-    # Device support for scaler 
-    record device(scaler,INST_IO,devScalerAsyn,"Asyn Scaler") 
-    device(scaler,VME_IO,devScaler,"Joerger VSC8/16") 
-    device(scaler,VME_IO,devScaler_VS,"Joerger VS") 
-    device(scaler,VME_IO,devScalerSTR7201,"Struck STR7201 Scaler") 
-    device(scaler,VME_IO,devScalerCamac,"CAMAC scaler") 
-    ``` 
+This file is loaded at ioc-boot time, and by database-configuration tools, and describes the scaler-record fields and the kinds of devices that may be associated with the scaler record. Normally the file contains the following scaler-related information:
+
+```
+# Database definition for scaler record
+include "scalerRecord.dbd"
+# Device support for scaler
+device(scaler,INST_IO,devScalerAsyn,"Asyn Scaler")
+device(scaler,VME_IO,devScaler,"Joerger VSC8/16")
+device(scaler,VME_IO,devScaler_VS,"Joerger VS")
+device(scaler,VME_IO,devScalerSTR7201,"Struck STR7201 Scaler")
+device(scaler,VME_IO,devScalerCamac,"CAMAC scaler")
+```
 
 
 | DATABASE and AUTOSAVE-REQUEST FILES | |
@@ -256,59 +228,65 @@ This file is loaded at ioc-boot time, and by database-configuration tools, and -
 | scaler16\_full\_calc.adl | same, but for 16-channel scaler |
 | scaler32\_full\_calc.adl | same, but for 32-channel scaler |
 
-These files build `medm` screens to access the scaler record and related process variables. To use one of them from the command line, type, for example
-    ```  
-    medm -x -macro "P=XXX:,S=scaler1" scaler.adl 
-    ```  
-    
-where `XXX:scaler1` is the name of a scaler record in an IOC.  These files can also be used as related displays from other `medm`screens by passing the argument `"P=XXX:,S=scaler1"`. 
+These files build `medm` screens to access the scaler record and related process variables. To use one of them from the command line, type, for example:
 
-
-#### EPICS STARTUP FILE
-
-This file is not included in the distribution. Here are annotated excerpts from a startup file that supports scalers: 
-
-```  
-####################################################################### 
-# vxWorks startup script to load and execute system (iocCore) software. 
-
-# Tell EPICS all about the record types, device-support modules, drivers, 
-# etc. in the software we just loaded (xxxApp) 
-dbLoadDatabase("dbd/xxxApp.dbd")  
-# scalers dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler1,OUT=#C0 S0 @,DTYP=Joerger VSC8/16,FREQ=10000000") 
-dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler2,OUT=#C0 S0 @,DTYP=Joerger VS,FREQ=10000000") 
-dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler3,OUT=#C0 S0 @,DTYP=Struck STR7201 Scaler,FREQ=25000000") 
-dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler4,OUT=#C0 S0 @,DTYP=CAMAC scaler,FREQ=10000000") 
-dbLoadRecords("$(SCALER)/db/scaler32.db", "P=xxx:,S=scaler5,OUT=@asyn($(PORT)),DTYP=Asyn Scaler,FREQ=50000000") 
-# VSCSetup(int nCards, char *baseAddress, unisgned intVectBase) 
-VSCSetup(2, 0xB0000000, 200) 
+```
+medm -x -macro "P=XXX:,S=scaler1" scaler.adl
 ```
 
->| nCards | the actual number of cards may be less than, but not greater than this | 
->| baseAddress | the base address of the first card of a series. This must agree with address jumpers on the actual card(s). Joerger VSC8 and VSC16 have base addresses in the A32 address space, on a 256-byte (0x100) boundary. (I.e., these cards require 256 bytes each, and must all be addressed contiguously as, e.g., 0xB0000000, 0xB0000100,...). | 
->| intVectBase | the interrupt vector that will be loaded into the first card of a series. Succeeding cards will be loaded with intVectBase+1, intVectBase+2, etc. Stay in the range \[64..255\]. (The interrupt *level*is read from the hardware.) |  
+where `XXX:scaler1` is the name of a scaler record in an IOC. These files can also be used as related displays from other `medm` screens by passing the argument `"P=XXX:,S=scaler1"`. 
 
-``` 
-# scalerVS_Setup(int nCards, char *baseAddress, unsigned intVectBase, int intLevel) 
+
+### EPICS Startup File
+
+This file is not included in the distribution. Here are annotated excerpts from a startup file that supports scalers:
+
+```
+# Tell EPICS all about the record types, device-support modules, drivers,
+# etc. in the software we just loaded (xxxApp)
+dbLoadDatabase("dbd/xxxApp.dbd")
+
+# scalers
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler1,OUT=#C0 S0 @,DTYP=Joerger VSC8/16,FREQ=10000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler2,OUT=#C0 S0 @,DTYP=Joerger VS,FREQ=10000000")
+dbLoadRecords("$(SCALER)/db/scaler16m.db","P=xxx:,S=scaler3,OUT=#C0 S0 @,DTYP=Struck STR7201 Scaler,FREQ=25000000")
+dbLoadRecords("$(SCALER)/db/scaler32.db", "P=xxx:,S=scaler5,OUT=@asyn($(PORT)),DTYP=Asyn Scaler,FREQ=50000000")
+
+# VSCSetup(int nCards, char *baseAddress, unsigned intVectBase)
+VSCSetup(2, 0xB0000000, 200)
+```
+
+| Parameter | Description |
+| - | - |
+| nCards | The actual number of cards may be less than, but not greater than this. |
+| baseAddress | The base address of the first card. Must agree with address jumpers on the card(s). Joerger VSC8 and VSC16 use A32 addresses on a 256-byte (0x100) boundary. Cards must be addressed contiguously (e.g., 0xB0000000, 0xB0000100, ...). |
+| intVectBase | The interrupt vector loaded into the first card. Succeeding cards use intVectBase+1, intVectBase+2, etc. Use the range 64-255. The interrupt level is read from the hardware. |
+
+```
+# scalerVS_Setup(int nCards, char *baseAddress, unsigned intVectBase, int intLevel)
 scalerVS_Setup(1, 0x2000, 205, 5)
 ```
 
->| nCards | the actual number of cards may be less than, but not greater than this | 
->| baseAddress | the base address of the first card of a series. This must agree with address jumpers on the actual card(s). Joerger VS scalers have base addresses in the A16 address space, on a 2048-byte (0x800) boundary. (I.e., these cards require 2048 bytes each, and must all be addressed contiguously as, e.g., 0x2000, 0x2800,...). | 
->| intVectBase | the interrupt vector that will be loaded into the first card of a series. Succeeding cards will be loaded with intVectBase+1, intVectBase+2, etc. Stay in the range \[64..255\]. | 
->| intLevel | the interrupt level this board should use. | 
+| Parameter | Description |
+| - | - |
+| nCards | The actual number of cards may be less than, but not greater than this. |
+| baseAddress | The base address of the first card. Joerger VS scalers use A16 addresses on a 2048-byte (0x800) boundary. Cards must be addressed contiguously (e.g., 0x2000, 0x2800, ...). |
+| intVectBase | The interrupt vector loaded into the first card. Succeeding cards use intVectBase+1, intVectBase+2, etc. Use the range 64-255. |
+| intLevel | The interrupt level this board should use. |
 
 ```
 drvSIS3801Config(Port, baseAddress, intVectBase, intLevel, 2048, 32)
 drvSIS3801Config($(PORT), 0xA0000000, 220, 6, $(MAX_CHANS), $(MAX_SIGNALS))
 ```
 
->| Port | name to give to asyn port defined by drvSIS3801Config() | 
->| baseAddress | the base address of the first card of a series. This must agree with address jumpers on the actual card(s). SIS3801 scalers have base addresses in the A32 address space, on a 2048-byte (0x800) boundary. (I.e., these cards require 2048 bytes each, and must all be addressed contiguously as, e.g., 0x90000000, 0x90000800,...). | 
->| intVectBase | the interrupt vector that will be loaded into the first card of a series. Succeeding cards will be loaded with intVectBase+1, intVectBase+2, etc. Stay in the range \[64..255\]. | 
->| intLevel | the interrupt level this board should use. | 
->| channels | number of channels for each signal. | 
->| signals | number of signals (i.e., counter inputs) | 
+| Parameter | Description |
+| - | - |
+| Port | Name to give to the asyn port defined by drvSIS3801Config(). |
+| baseAddress | The base address of the first card. SIS3801 scalers use A32 addresses on a 2048-byte (0x800) boundary. Cards must be addressed contiguously (e.g., 0x90000000, 0x90000800, ...). |
+| intVectBase | The interrupt vector loaded into the first card. Succeeding cards use intVectBase+1, intVectBase+2, etc. Use the range 64-255. |
+| intLevel | The interrupt level this board should use. |
+| channels | Number of channels for each signal. |
+| signals | Number of signals (i.e., counter inputs). |
 
 
 | BACKUP/RESTORE (BURT) REQUEST FILES | |
@@ -316,23 +294,18 @@ drvSIS3801Config($(PORT), 0xA0000000, 220, 6, $(MAX_CHANS), $(MAX_SIGNALS))
 | scalerSettings.req | sample request file to save settings of one scaler database. Edit this file, supplying names of the scaler records whose settings you want saved. (The sample file also saves the states of other records in the sample database, Jscaler.db, that control calculations done when the scaler finishes counting.) |
 | yyScalerSettings.req | save settings of a specified scaler record. This file is `#include`'d (once for each scaler) by scalerSettings.req. |
 
-These files tell the backup/restore tool how to save scaler settings. To use them from the command line, type, for example
-    ```  
-    burtrb -f scalerSettings.req -o myScalerSettings.snap
-    ```  
-    To restore the scaler settings saved by the above commands, type 
-    ```  
-    burtwb -f myScalerSettings.snap
-    ``` 
+These files tell the backup/restore tool how to save scaler settings. To use them from the command line, type, for example:
 
-- - - - - -
+```
+burtrb -f scalerSettings.req -o myScalerSettings.snap
+```
 
-Restrictions
-------------
+To restore the scaler settings saved by the above commands, type:
+
+```
+burtwb -f myScalerSettings.snap
+```
+
+## Restrictions
 
 When AutoCount is enabled, with a very short counting time (TP1) and delay time (DLY1), the scaler can swamp the network with data.
-
-- - - - - -
-
-Suggestions and comments to:   
-[Tim Mooney](mailto:mooney@aps.anl.gov) : (mooney@aps.anl.gov)
