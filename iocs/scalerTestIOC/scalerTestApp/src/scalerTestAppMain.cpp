@@ -1,5 +1,4 @@
-/* scalerAppMain.cpp */
-/* Author:  Marty Kraimer Date:    17MAR2000 */
+/* scalerTestAppMain.cpp */
 
 #include <stddef.h>
 #include <stdlib.h>

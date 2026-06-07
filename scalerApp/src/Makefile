@@ -34,32 +34,6 @@ INC += devScalerAsyn.h
 scaler_LIBS += asyn
 scaler_LIBS += $(EPICS_BASE_IOC_LIBS)
 
-#=============================
-# build an IOC for testing
-
-ifdef CALC
-PROD_IOC = scalerApp
-
-# Generate DBD file
-DBD += scalerApp.dbd
-scalerApp_DBD += base.dbd
-scalerApp_DBD += asyn.dbd
-scalerApp_DBD += drvAsynSerialPort.dbd
-scalerApp_DBD += drvAsynIPPort.dbd
-scalerApp_DBD += scalerSupport.dbd
-scalerApp_DBD += calcSupport.dbd
-
-# <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
-scalerApp_SRCS += scalerApp_registerRecordDeviceDriver.cpp
-scalerApp_SRCS_DEFAULT += scalerAppMain.cpp
-scalerApp_SRCS_vxWorks += -nil-
-
-scalerApp_LIBS += scaler
-scalerApp_LIBS += calc
-scalerApp_LIBS += asyn
-scalerApp_LIBS += $(EPICS_BASE_IOC_LIBS)
-endif
-
 #===========================
 
 include $(TOP)/configure/RULES

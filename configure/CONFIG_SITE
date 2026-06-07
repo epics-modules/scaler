@@ -3,6 +3,9 @@
 # Canonical module name for cfg-deps automated dependency system
 MODULE = SCALER
 
+# Build example IOC applications
+BUILD_IOCS = YES
+
 # Make any application-specific changes to the EPICS build
 #   configuration variables in this file.
 #
