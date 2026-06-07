@@ -141,123 +141,63 @@ counting.
 
 ## Field Descriptions
 
-In addition to fields common to all record types (see the [EPICS Record Reference Manual](https://docs.epics-controls.org/projects/base/en/latest/dbCommonRecord.html) for these) the scaler record has the fields described below.
+In addition to fields common to all record types (see [Fields Common to All Record Types](https://docs.epics-controls.org/projects/base/en/latest/dbCommonRecord.html)) the scaler record has the fields described below.
 
-| Name | Access | Prompt | Data type | Comment |
-|---|---|---|---|---|
-| [ CNT ](#Fields_control) | R/W\* | Count | RECCHOICE | (0:"Done", 1:"Count") |
-| [ CONT ](#Fields_control) | R/W\* | OneShot/AutoCount | RECCHOICE | (0:"OneShot", 1:"AutoCount") |
-| [ COUT ](#Fields_link) | R/W | CNT Output | OUTLINK | Link to PV |
-| [ COUTP ](#Fields_link) | R/W | Prompt COUT | OUTLINK | Link to PV |
-| [ D1...D64](#Fields_private) | R/W | Count Direction n | RECCHOICE | (0:"Up", 1:"Dn") |
-| [ DLY ](#Fields_control) | R/W | Delay | FLOAT | before counting |
-| [ DLY1 ](#Fields_control) | R/W | Auto-mode Delay | FLOAT | before counting |
-| [ EGU ](#Fields_misc) | R/W | Units Name | STRING | 8 characters |
-| [ FREQ ](#Fields_data) | R/W | Time base freq | DOUBLE | e.g., 1e7 |
-| [ G1...G64](#Fields_control) | R/W | Gate Control n | RECCHOICE | preset? (0:"N", 1:"Y") |
-| [ NCH ](#Fields_misc) | R | Number of Channels | SHORT | from device |
-| [ NM1...NM64](#Fields_misc) | R/W | Scaler n name | STRING | user's field |
-| [ OUT ](#Fields_link) | R | Output Specification | OUTLINK | link to hardware |
-| [ PCNT ](#Fields_private) | R | Prev Count | RECCHOICE | private |
-| [ PREC ](#Fields_misc) | R/W | Display Precision | SHORT | num decimal places |
-| [ PR1...PR64](#Fields_control) | R/W | Preset n | ULONG | preset values |
-| [ RATE ](#Fields_control) | R/W | Display Rate (Hz) | FLOAT | in \[0..60\] Hz |
-| [ RAT1 ](#Fields_control) | R/W | Auto Display Rate | FLOAT | in \[0..60\] Hz |
-| [ RPVT ](#Fields_private) | r | private | void \* | private |
-| [ S1...S64](#Fields_data) | R | Scaler n | ULONG | results |
-| [ SS](#Fields_private) | r | Scaler state | SHORT | state of hardware |
-| [ T ](#Fields_data) | R | Timer | DOUBLE | elapsed time |
-| [ TP ](#Fields_control) | R/W | Time Preset | DOUBLE | preset time |
-| [ TP1 ](#Fields_control) | R/W | Time Preset | DOUBLE | preset time (auto mode) |
-| [ US](#Fields_private) | r | User state | SHORT | state of user request |
-| [ VAL ](#Fields_private) | R/W | Result | DOUBLE | posted when counting is done |
-| [ VERS ](#Fields_misc) | R | Code Version | FLOAT | code version |
-
-
-### Alphabetical list of record-specific fields 
-
-NOTE: Hot links in this table take you only to the *section* in which the linked item is described in detail. You'll probably have to scroll down to find the actual item. 
-
-Note: In the __Access__ column above: 
-
-| R | Read only |  
-| r | Read only, not posted | 
-| R/W | Read and write are allowed | 
-| R/W\* | Read and write are allowed; write triggers record processing if the record's SCAN field is set to "Passive." | 
-| N | No access allowed |
-
+In the **Access** column: **R** = read only, **R/W** = read and write,
+**R/W\*** = read and write where writing triggers record processing when
+SCAN is "Passive", **r** = read only, not posted.
 
 ### Control/status fields
 
-| Name | Access | Prompt | Data type | Comments |
-|---|---|---|---|---|
-| CNT | R/W\* | Count | RECCHOICE | (0:"Done", 1:"Count") |
-| User sets this field to "Count" (1) to start counting. When a preset is reached, counting will stop, this field will be reset to "Done" (0), and the forward link will be fired. If this field is set to "Done" (0) while counting is in progress, counting will be stopped, the accumulated counts will be reported, and the forward link will be fired. |
-| CONT | R/W\* | OneShot/AutoCount | RECCHOICE | (0:"OneShot", 1:"AutoCount") |
-| User sets this field to "AutoCount" (1) to enable background counting. (See also autocount delay (DLY1), autocount display rate (RAT1), and autocount time presetTP1.) |
-| G1...G64 | R/W | Gate control | RECCHOICE | (0:"N", 1:"Y") |
-| There are 64 of these fields, one per channel. These fields determine whether the associated scalers are to be used as simple scalers (Gn=0) or preset scalers (Gn=1), assuming the hardware is capable. When Gn is set to 1, the record will ensure than PRn is nonzero (will set it to 1000, if it was zero). When PRn is set to any positive value, the record will set Gn to 1. If the hardware does not implement preset scalers, device support will set these fields to 0 whenever it notices that they have been set to 1. |
-| PR1...PR64 | R/W | Preset n | ULONG |
-| Preset values for the associated scalers. If scaler n has been designated as a preset scaler (i.e., if Gn=1), then when the scaler reaches the count PRn, all scalers will be disabled, and the record will report counting has completed by setting CNT=0. If scaler n has not been designated as a preset scaler, the PRn is ignored. When PRn changes to any positive value, the record will set Gn to 1. |
-| TP | R/W | Time preset | DOUBLE |
-| This field specifies for how long, in seconds, the scaler is to count if no other preset stops it. TP is effectively a proxy for the preset field, PR1, associated with scaler 1. Whenever TP changes, the record will set PR1 = TP\*FREQ, and otherwise behave as though the user had changed PR1. |
-| TP1 | R/W | AutoCount Time preset | DOUBLE |
-| This field specifies the background-counting period in seconds. |
-| DLY | R/W | Delay (sec) | FLOAT |
-| The delay, in seconds, that the record is to wait after CNT goes to 1 before actually causing counting to begin. |
-| DLY1 | R/W | AutoCount Delay (sec) | FLOAT |
-| The delay, in seconds, between successive background-counting periods. |
-| RATE | R/W | Display rate (Hz) | FLOAT |
-| This field specifies the rate in Hz at which the scaler record posts scaler information while counting is in progress. If this field is zero, counts are displayed only after counting has stopped. Max. rate: 60 Hz |
-| RAT1 | R/W | AutoCount Display rate (Hz) | FLOAT |
-| This field specifies the rate in Hz at which the scaler record posts scaler information while background counting is in progress. If this field is zero, counts are displayed only after background counting has stopped. Max. rate: 60 Hz |
-|  |  |  |  |  |
-
+| Field | Access | Type | Choices | Description |
+| - | - | - | - | - |
+| CNT | R/W* | RECCHOICE | 0: Done, 1: Count | Set to "Count" to start counting. When a preset is reached, counting stops, this field resets to "Done", and the forward link fires. Setting to "Done" while counting is in progress stops counting and reports accumulated counts. |
+| CONT | R/W* | RECCHOICE | 0: OneShot, 1: AutoCount | Set to "AutoCount" to enable background counting. See also DLY1, RAT1, and TP1. |
+| G1...G64 | R/W | RECCHOICE | 0: N, 1: Y | Gate control for each channel. Determines whether the channel is a simple scaler (N) or preset scaler (Y). Setting Gn to Y ensures PRn is nonzero (defaults to 1000). Setting PRn to a positive value automatically sets Gn to Y. Device support forces Gn to N on hardware that does not support presets. |
+| PR1...PR64 | R/W | ULONG | | Preset values. If Gn = Y, counting stops when Sn reaches PRn. If Gn = N, PRn is ignored. Setting PRn to a positive value automatically sets Gn to Y. |
+| TP | R/W | DOUBLE | | Time preset in seconds. Acts as a proxy for PR1: changing TP sets PR1 = TP * FREQ. |
+| TP1 | R/W | DOUBLE | | AutoCount time preset. Specifies the background-counting period in seconds. |
+| DLY | R/W | FLOAT | | Delay in seconds after CNT is set to "Count" before counting actually begins. |
+| DLY1 | R/W | FLOAT | | AutoCount delay in seconds between successive background-counting periods. |
+| RATE | R/W | FLOAT | | Display update rate in Hz (0-60) during normal counting. If zero, counts are displayed only after counting stops. |
+| RAT1 | R/W | FLOAT | | Display update rate in Hz (0-60) during background counting. If zero, counts are displayed only after background counting stops. |
 
 ### Data fields
 
-| Name | Access | Prompt | Data type | Comments |
-|---|---|---|---|---|
-| FREQ | R/W | Time base freq. (EGU) | DOUBLE |
-| The frequency (in Hz) of the clock signal counted by scaler 1. The record uses this field to convert between time values (T and TP, in seconds) and values associated with scaler 1 (S1 and PR1). It is the user's responsibility to ensure that this field has the correct value. |
-| S1...S64 | R | Scaler n value (EGU) | ULONG |
-| The counts accumulated by the scalers. These are posted periodically (at RATE Hz) while counting is in progress, and once after counting stops. |
-| T | R | Timer (EGU) | DOUBLE |
-| This field is a proxy for the value field, S1, associated with scaler 1. Whenever S1 changes, the record will set T = S1/FREQ. |
-
+| Field | Access | Type | Choices | Description |
+| - | - | - | - | - |
+| FREQ | R/W | DOUBLE | | Clock frequency in Hz for the signal counted by scaler channel 1. Used to convert between time values (T, TP) and channel 1 values (S1, PR1). The user must ensure this field is correct. |
+| S1...S64 | R | ULONG | | Accumulated counts for each channel. Posted at RATE Hz while counting and once after counting stops. |
+| T | R | DOUBLE | | Elapsed time in seconds. Computed as S1 / FREQ whenever S1 changes. |
 
 ### Link fields
 
-| Name | Access | Prompt | Data type | Comments |
-|---|---|---|---|---|
-| COUT | R/W | CNT Output | OUTLINK | link to EPICS PV to which CNT field's value is written when a user count sequence has just started, or has just finished. |
-| COUTP | R/W | Prompt CNT Output | OUTLINK | link to EPICS PV to which CNT field's value is written when a user count sequence has just been commanded, or has just finished. This outlink is not delayed, as is COUT, by the DLY field. |
-| OUT | R | Output Specification | OUTLINK | This field specifies the hardware to be controlled. |
-
+| Field | Access | Type | Choices | Description |
+| - | - | - | - | - |
+| COUT | R/W | OUTLINK | | Output link. CNT field value is written to this PV when a count sequence starts or finishes. Delayed by the DLY field. |
+| COUTP | R/W | OUTLINK | | Prompt output link. Same as COUT but not delayed by DLY -- fires immediately when CNT changes. |
+| OUT | R | OUTLINK | | Output specification. Specifies the hardware to be controlled. |
 
 ### Miscellaneous fields
 
-| Name | Access | Prompt | Data type | Comments |
-|---|---|---|---|---|
-| NM1...NM64 | R/W | Scaler n name | STRING | Names the user has given to individual scaler channels. |
-| PREC | R/W | Display Precision | SHORT | The number of digits to the right of the decimal that are to be displayed by MEDM and other channel-access clients. |
-| EGU | R/W | Engineering Units | STRING | String sent to channel-access clients who ask for engineering units. |
-| VERS | R | Code Version | FLOAT | Version number of the recScaler.c code. |
-| NCH | R | Number of channels | SHORT | The number of channels actually supported by the underlying hardware, as reported by device support. |
+| Field | Access | Type | Choices | Description |
+| - | - | - | - | - |
+| NM1...NM64 | R/W | STRING | | User-assigned names for individual scaler channels. |
+| PREC | R/W | SHORT | | Display precision. Number of digits to the right of the decimal point. |
+| EGU | R/W | STRING | | Engineering units string sent to Channel Access clients. |
+| VERS | R | FLOAT | | Code version number of the scaler record support. |
+| NCH | R | SHORT | | Number of channels supported by the hardware, as reported by device support. |
 
 ### Private fields
 
-| Name | Access | Prompt | Data type | Comments |
-|---|---|---|---|---|
-| D1...D64 | R/W | Count direction | RECCHOICE | (0:"Up", 1:"Dn") |
-| These fields are intended for the private use of the record, and may disappear or become read-only in the future. For scaler n, Dn is direction in which the hardware actually counts. |
-| PCNT | R/W | Previous count | RECCHOICE | (0:"Done", 1:"Count") |
-| Previous value of CNT. |
-| SS | r | Scaler state | SHORT | state of hardware |
-|  |
-| US | r | User state | SHORT | state of user's request |
-|  |
-| VAL | R/W | Result | DOUBLE | Set to value of the T field, and posted when counting is done, after all other fields have been posted. |
+| Field | Access | Type | Choices | Description |
+| - | - | - | - | - |
+| D1...D64 | R/W | RECCHOICE | 0: Up, 1: Dn | Count direction. The direction in which the hardware actually counts for channel n. These fields are for internal use and may become read-only in the future. |
+| PCNT | R/W | RECCHOICE | 0: Done, 1: Count | Previous value of the CNT field. |
+| SS | r | SHORT | | Scaler hardware state. |
+| US | r | SHORT | | User request state. |
+| VAL | R/W | DOUBLE | | Result. Set to the value of T and posted when counting is done, after all other fields have been posted. |
+| RPVT | r | void * | | Private pointer used internally by the record. |
 
 
 
