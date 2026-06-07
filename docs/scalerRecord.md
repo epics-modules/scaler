@@ -15,39 +15,129 @@ nav_order: 3
 
 ## Overview
 
-The scaler record provides support for a bank of up to 64 32-bit counters (scaler channels) controlled by a common start/stop mechanism. If the hardware is capable of preset-counter operation, the record divides scaler channels into two groups according to the values of each channel's gate-control field (Gn): simple counters \[Gn = "N" (0)\], and preset counters \[Gn = "Y" (1)\]. Simple counters are zeroed immediately before counting begins, and count upwards. Preset counters are simple counters that will not count higher than a preset value. The first preset counter to reach its preset value stop all counters. (The hardware may actually implement a preset counter by loading in the preset value, and counting down to zero. If so, device support is expected to maintain the fiction that all counters count up from zero.) Currently device support exists for the Joerger VSC 8 and 16 channel VME scalers; Joerger VS64 fly-counting scalers; the SIS3801 multichannel scaler, emulating a single scaler bank, and the SIS3820. Joerger VS scalers do not support preset counting, so the software sets the Gn fields to 0 and keeps them there.
+The scaler record provides support for a bank of up to 64 32-bit
+counters (scaler channels) controlled by a common start/stop mechanism.
 
-Scaler channel 1 receives special treatment: it is presumed to count a reference-frequency clock signal and its value indicates the time interval during which counting was enabled. The fields
+### Channel Types
 
-- T (time)
-- TP (time preset)
-- S1 (scaler channel 1 value)
-- PR1 (scaler channel 1 preset value), and
-- FREQ (clock frequency)
+If the hardware is capable of preset-counter operation, the record
+divides scaler channels into two groups according to the values of each
+channel's gate-control field (**Gn**):
 
- satisfy the following equations: 
- 
+- **Simple counters** (Gn = "N"): Zeroed immediately before counting
+  begins, and count upwards.
+- **Preset counters** (Gn = "Y"): Simple counters that will not count
+  higher than a preset value. The first preset counter to reach its
+  preset value stops all counters.
+
+The hardware may actually implement a preset counter by loading in the
+preset value and counting down to zero. If so, device support is
+expected to maintain the fiction that all counters count up from zero.
+Hardware that does not support preset counting (e.g., Joerger VS) will
+have Gn forced to "N" by device support.
+
+### Channel 1 and Time Base
+
+Scaler channel 1 receives special treatment: it is presumed to count a
+reference-frequency clock signal and its value indicates the time
+interval during which counting was enabled. The fields **T** (time),
+**TP** (time preset), **S1** (channel 1 value), **PR1** (channel 1
+preset), and **FREQ** (clock frequency) satisfy:
+
 ```
-	T = S1 / FREQ
-	TP = PR1 / FREQ
+T  = S1  / FREQ
+TP = PR1 / FREQ
 ```
 
-The manner in which the time base is managed is different for different kinds of scaler hardware. Joerger VSC scalers It is the user's job to make sure that a clock signal is presented to the channel-1 input, and that FREQ actually contains the frequency of the clock signal. The 10 MHz signal available on the front panel normally is used for this purpose. SIS3801 scalers Normally, the hardware is set up to connect an internally generated 25-MHz clock to channel 1, via a software switch. (Thus, any external signal connected to SIS3801 channel 1 will be ignored.) It is possible to use an externally generated clock, and in any case it is still the user's responsibility to ensure that FREQ contains the correct value. The SIS3801 does not support hardware presets. However, presets are emulated as follows. The scaler is uses a FIFO to buffer the counts in each dwell period. For the scaler record mode (as opposed to the MCS mode used with the MCA record) the dwell time is set to 0.01 seconds. Thus, every 0.01 seconds the counts for each channel are pushed into the FIFO stack. When the driver reads the FIFO at the scaler polling rate (.RATE) it compares the total counts for each channel with the preset counts. If any preset is reached then it signals that counting is complete. Thus, the counting could have extended for up to 0.01 second longer than requested, but each channel will have counted for exactly the same period of time, so the counts per second will be accurate. SIS3820 scalers  Normally the hardware is set up to connect an internally generated 50-MHz clock to channel 1, via a software switch. The SIS3820 supports hardware presets. However, there is only a single preset for channels 1-16, and a second preset for channels 17-32. This means that only one channel from 1-16 and one channel from 17-32 can be used as a preset at the same time. The driver handles this limitation by using the highest numbered channel in each group that has a non-zero preset (PRn) and active gate (Gn=Y). For example, if PR1, PR3, PR18 and PR22 are all non-zero and G1,G3,G18 and G22 are "Y", then the scaler will stop counting when S3=PR3 or S22=PR22, whichever comes first. Joerger VS scalers This hardware does not implement preset counters; an internal 16-bit gate-time counter is used to set the counting time. The device-support software will choose a reference frequency for this counter, and cause the hardware to generate and use it. Also, device-support will set and post the FREQ field according to the reference frequency it has chosen. But the reference signal still must be connected by the user to the channel-1 input, so that the record and any clients can treat channel 1 as the time base. This is how the scaler record is intended to be used:
+### Hardware Time Base Management
 
-1. The user sets FREQ to the frequency of the clock signal input to scaler channel 1. (Joerger VSC, SIS3801, and SIS3820 only)
-2. The user sets TP (time preset) and/or PRn (preset value for scaler channel n). (For Joerger VS scalers, only TP or PR1 may be set.)
-3. The user sets CNT to "Count" (1), initiating counting.
-4. For Joerger VSC, SIS3801 and SIS3820 scalers, the counters count until any preset counter reaches its preset value, whereupon the record resets CNT to "Done" (0), or the user manually resets CNT to "Done" (0), causing counting to stop. For Joerger VS scalers, counters count until the internal gate-time counter reaches its preset, or the user manually resets CNT to "Done" (0).
+The manner in which the time base is managed differs by hardware type:
 
-This version of the scaler record maintains two counting modes: normal and background (also called AutoCount). Normal counting is controlled by the CNT ("Count/Done") field, the time preset, and possibly other presets, as described above. Background counting is controlled by the CONT ("OneShot/AutoCount") field, normally ignores user preset values, and is intended to give the user continuous updates whenever the scaler would otherwise be idle.
+**Joerger VSC scalers** -- The user must connect a clock signal to the
+channel-1 input and set **FREQ** to its frequency. The 10 MHz signal
+available on the front panel is normally used for this purpose.
 
-When CONT = "AutoCount" (1), and no normal counting operation is already in progress, the scaler waits for the AutoCount delay (DLY1); counts for the AutoCount period (TP1); and displays the result. If the AutoCount period (TP1) is less than .001 s, we default to the normal criteria for determining the count period. If the AutoCount Display Rate (RAT1) is greater than zero (Hz), then the scaler values are displayed at that rate while background counting is in progress.
+**SIS3801 scalers** -- The hardware connects an internally generated
+25 MHz clock to channel 1 via a software switch. Any external signal
+connected to channel 1 will be ignored. It is possible to use an
+externally generated clock; in any case the user must ensure **FREQ**
+contains the correct value. The SIS3801 does not support hardware
+presets. Presets are emulated using a FIFO that buffers counts in 0.01 s
+dwell periods. The driver reads the FIFO at the scaler polling rate
+(**RATE**) and compares total counts against presets. Counting may
+extend up to 0.01 s beyond the requested time, but all channels count
+for exactly the same period, so counts per second remain accurate.
 
-Background counting is interrupted immediately whenever a normal counting operation is started with the CNT field, and the results of a normal counting operation are held for ten seconds after the scaler finishes normal counting, before background counting begins again. The ten-second data-hold period can be changed by setting the integer variable 'scaler\_wait\_time' to the desired hold time in seconds, either at the ioc console, or in the ioc-startup file, st.cmd.
+**SIS3820 scalers** -- The hardware connects an internally generated
+50 MHz clock to channel 1 via a software switch. The SIS3820 supports
+hardware presets, but with a limitation: there is only a single preset
+register for channels 1-16 and a second for channels 17-32. Only one
+channel from each group can serve as a preset at the same time. The
+driver uses the highest numbered channel in each group that has a
+non-zero preset (**PRn**) and active gate (**Gn** = "Y"). For example,
+if PR1, PR3, PR18, and PR22 are all non-zero with their gates active,
+counting stops when S3 = PR3 or S22 = PR22, whichever comes first.
 
-Background counting never affects the state of the CNT field, so this field can always be used to determine when a normal counting operation has begun and finished.
+**Joerger VS scalers** -- This hardware does not implement preset
+counters. An internal 16-bit gate-time counter sets the counting time.
+Device support chooses a reference frequency and configures the
+hardware to generate it, then sets and posts the **FREQ** field
+accordingly. The user must still connect the reference signal to the
+channel-1 input so that the record and clients can treat channel 1 as
+the time base.
 
-The scaler record is unlike most other EPICS records in that its processing is neither "synchronous" nor "asynchronous", as these terms are used in the EPICS Application Developer' Guide. Currently, the PACT field is always FALSE after record processing has completed, even though the scaler may be counting. This means the record always responds to channel-access puts, and that counting can be stopped at any time. The record's forward link is not executed until the scaler has stopped counting. 
+### Counting Operation
+
+1. The user sets **FREQ** to the frequency of the clock signal input to
+   scaler channel 1 (Joerger VSC, SIS3801, and SIS3820 only).
+2. The user sets **TP** (time preset) and/or **PRn** (preset value for
+   channel n). For Joerger VS scalers, only TP or PR1 may be set.
+3. The user sets **CNT** to "Count" (1), initiating counting.
+4. Counting continues until any preset counter reaches its preset
+   value, at which point the record resets **CNT** to "Done" (0). The
+   user may also manually set **CNT** to "Done" to stop counting at
+   any time.
+
+### Background Counting (AutoCount)
+
+The scaler record supports two counting modes: normal and background
+(AutoCount).
+
+Normal counting is controlled by the **CNT** field, the time preset,
+and possibly other presets as described above. Background counting is
+controlled by the **CONT** ("OneShot/AutoCount") field and is intended
+to give the user continuous updates whenever the scaler would otherwise
+be idle.
+
+When **CONT** = "AutoCount" (1) and no normal counting operation is in
+progress, the scaler waits for the AutoCount delay (**DLY1**), counts
+for the AutoCount period (**TP1**), and displays the result. If **TP1**
+is less than 0.001 s, the normal preset criteria are used instead. If
+the AutoCount Display Rate (**RAT1**) is greater than zero, scaler
+values are displayed at that rate while background counting is in
+progress.
+
+Background counting is interrupted immediately when a normal counting
+operation starts. After normal counting finishes, the results are held
+for ten seconds before background counting resumes. This hold period
+can be changed by setting the variable `scaler_wait_time` to the
+desired number of seconds, either at the IOC console or in the startup
+script.
+
+Background counting never affects the state of the **CNT** field, so
+this field can always be used to determine when a normal counting
+operation has begun and finished.
+
+### Record Processing
+
+The scaler record is unlike most other EPICS records in that its
+processing is neither "synchronous" nor "asynchronous" as these terms
+are used in the EPICS Application Developer's Guide. The **PACT** field
+is always FALSE after record processing has completed, even though the
+scaler may still be counting. This means the record always responds to
+Channel Access puts, and counting can be stopped at any time. The
+record's forward link is not executed until the scaler has stopped
+counting.
 
 ## Field Descriptions
 
