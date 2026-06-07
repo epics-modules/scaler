@@ -15,6 +15,9 @@ DBDINC += scalerRecord
 # Install DBD file
 DBD += scalerSupport.dbd
 
+# Install cfg-deps declaration file
+CFG += SCALER_DEPS
+
 #=============================
 
 LIBRARY_IOC += scaler
