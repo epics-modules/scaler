@@ -689,7 +689,7 @@ static long special(DBADDR *paddr, int after)
 
 	case scalerRecordRATE:
 		pscal->rate = MIN(60.,MAX(0.,pscal->rate));
-		db_post_events(pscal,&(pscal->tp),DBE_VALUE);
+		db_post_events(pscal,&(pscal->rate),DBE_VALUE);
 		break;
 
 	default:
