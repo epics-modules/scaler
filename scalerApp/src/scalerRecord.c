@@ -768,7 +768,7 @@ static void monitor(scalerRecord *pscal)
 	/* check all value fields for changes */
 	/* post scaler values */
 	for (i=0; i<pscal->nch; i++) {
-		db_post_events(pscal,&(pscaler[i]),DBE_LOG);
+		db_post_events(pscal,&(pscaler[i]),monitor_mask);
 	}
 	return;
 }
