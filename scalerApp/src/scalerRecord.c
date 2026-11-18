@@ -184,8 +184,8 @@ struct rpvtStruct {
 	CALLBACK *pcallbacks;
 };
 
-static void do_alarm();
-static void monitor();
+static void do_alarm(scalerRecord *pscal);
+static void monitor(scalerRecord *pscal);
 static void updateCounts(scalerRecord *pscal);
 
 static void deviceCallbackFunc(CALLBACK *pcb)
@@ -303,7 +303,7 @@ static long init_record(dbCommon *pcommon, int pass)
 	Debug(2) "init_record: calling dset->init_record\n");}
 	if (pdset->init_record)
 	{
-		status=(*pdset->init_record)(pscal, pdeviceCallback);
+		status=((long (*)(scalerRecord *, CALLBACK *))pdset->init_record)(pscal, pdeviceCallback);
 		Debug(3) "init_record: dset->init_record returns %ld\n", status);}
 		if (status) {
 			return (status);
@@ -363,8 +363,8 @@ static long process(dbCommon *pcommon)
 	prev_scaler_state = pscal->ss;
 
 	/* If we're being called as a result of a done-counting interrupt, */
-	/* (*pdset->done)(pscal) will return TRUE */
-	if ((*pdset->done)(pscal)) {
+	/* ((long (*)(scalerRecord *))pdset->done)(pscal) will return TRUE */
+	if (((long (*)(scalerRecord *))pdset->done)(pscal)) {
 		pscal->ss = SCALER_STATE_IDLE;
 		/* Auto-count cycle is not allowed to reset .CNT field. */
 		if (pscal->us == USER_STATE_COUNTING) {
@@ -382,7 +382,7 @@ static long process(dbCommon *pcommon)
 							(pscal->us == USER_STATE_WAITING))) {
 			/*** if we're already counting (auto-count), stop ***/
 			if (pscal->ss == SCALER_STATE_COUNTING) {
-				(*pdset->arm)(pscal, 0);
+				((long (*)(scalerRecord *, int))pdset->arm)(pscal, 0);
 				pscal->ss = SCALER_STATE_IDLE;
 			}
 
@@ -391,7 +391,7 @@ static long process(dbCommon *pcommon)
 
 				/* disarm, disable interrupt generation, reset disarm-on-cout, */
 				/* clear mask register, clear direction register, clear counters */
-				(*pdset->reset)(pscal);
+				((long (*)(scalerRecord *))pdset->reset)(pscal);
 
 				/*
 				 * We tell device support how long to count by giving it a preset,
@@ -414,12 +414,12 @@ static long process(dbCommon *pcommon)
 					pdir[i] = pgate[i];
 					if (pgate[i]) {
 						Debug(5) "process: writing preset: %d.\n", ppreset[i]);}
-						(*pdset->write_preset)(pscal, i, ppreset[i]);
+						((long (*)(scalerRecord *, int, unsigned long))pdset->write_preset)(pscal, i, ppreset[i]);
 					}
 				}
 				if (save_pr1 != pscal->pr1) {
 					pscal->pr1 = (epicsUInt32) NINT(pscal->tp * pscal->freq);
-					(*pdset->write_preset)(pscal, 0, pscal->pr1);
+					((long (*)(scalerRecord *, int, unsigned long))pdset->write_preset)(pscal, 0, pscal->pr1);
 				}
 				if (old_pr1 != pscal->pr1) {
 					db_post_events(pscal,&(pscal->pr1),DBE_VALUE);
@@ -430,7 +430,7 @@ static long process(dbCommon *pcommon)
 					db_post_events(pscal,&(pscal->freq),DBE_VALUE);
 				}
 
-				(*pdset->arm)(pscal, 1);
+				((long (*)(scalerRecord *, int))pdset->arm)(pscal, 1);
 				pscal->ss = SCALER_STATE_COUNTING;
 				pscal->us = USER_STATE_COUNTING;
 				handled = 1;
@@ -438,7 +438,7 @@ static long process(dbCommon *pcommon)
 			}
 		} else if (!pscal->cnt) {
 			/*** stop counting ***/
-			if (pscal->ss != SCALER_STATE_IDLE)	(*pdset->arm)(pscal, 0);
+			if (pscal->ss != SCALER_STATE_IDLE)	((long (*)(scalerRecord *, int))pdset->arm)(pscal, 0);
 			pscal->ss = SCALER_STATE_IDLE;
 			pscal->us = USER_STATE_IDLE;
 			justFinishedUserCount = 1;
@@ -508,29 +508,29 @@ static long process(dbCommon *pcommon)
 			 */
 			 old_freq = pscal->freq;
 			 old_pr1 = pscal->pr1;
-			(*pdset->reset)(pscal);
+			((long (*)(scalerRecord *))pdset->reset)(pscal);
 			if (pscal->tp1 >= 1.e-3) {
 				save_pr1 = pscal->pr1;
-				(*pdset->write_preset)(pscal, 0, (unsigned long)(pscal->tp1*pscal->freq));
+				((long (*)(scalerRecord *, int, unsigned long))pdset->write_preset)(pscal, 0, (unsigned long)(pscal->tp1*pscal->freq));
 				if (save_pr1 != pscal->pr1) {
 					/*
 					 * Device support wants to use a different clock freq.  We might
 					 * get a more accurate counting time if we recalc the preset count
 					 * from tp1 with the new clock frequency.
 					 */
-					(*pdset->write_preset)(pscal, 0, (unsigned long)(pscal->tp1*pscal->freq));
+					((long (*)(scalerRecord *, int, unsigned long))pdset->write_preset)(pscal, 0, (unsigned long)(pscal->tp1*pscal->freq));
 				}
 
 			} else {
 				for (i=0; i<pscal->nch; i++) {
 					pdir[i] = pgate[i];
-					if (pgate[i]) (*pdset->write_preset)(pscal, i, ppreset[i]);
+					if (pgate[i]) ((long (*)(scalerRecord *, int, unsigned long))pdset->write_preset)(pscal, i, ppreset[i]);
 				}
 			}
 			if (old_freq != pscal->freq) db_post_events(pscal,&(pscal->freq),DBE_VALUE);
 			/* Don't let autocount disturb user's channel-1 preset */
 			pscal->pr1 = old_pr1;
-			(*pdset->arm)(pscal, 1);
+			((long (*)(scalerRecord *, int))pdset->arm)(pscal, 1);
 			pscal->ss = SCALER_STATE_COUNTING;
 
 			/* schedule first update callback */
@@ -569,7 +569,7 @@ static void updateCounts(scalerRecord *pscal)
 
 	/* read scalers (get pointer to actual VME-resident scaler-data array) */
 	if (pscal->us != USER_STATE_WAITING) {
-		(*pdset->read)(pscal, counts);
+		((long (*)(scalerRecord *, epicsUInt32 *))pdset->read)(pscal, counts);
 	} else {
 		for (i=0; i<pscal->nch; i++) {counts[i] = 0;}
 	}

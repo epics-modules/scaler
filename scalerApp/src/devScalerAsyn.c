@@ -81,13 +81,13 @@ SCALERDSET devScalerAsyn = {
     7,
     NULL,
     NULL,
-    scaler_init_record,
+    (DEVSUPFUN)scaler_init_record,
     NULL,
-    scaler_reset,
-    scaler_read,
-    scaler_write_preset,
-    scaler_arm,
-    scaler_done
+    (DEVSUPFUN)scaler_reset,
+    (DEVSUPFUN)scaler_read,
+    (DEVSUPFUN)scaler_write_preset,
+    (DEVSUPFUN)scaler_arm,
+    (DEVSUPFUN)scaler_done
 };
 epicsExportAddress(dset, devScalerAsyn);
 
